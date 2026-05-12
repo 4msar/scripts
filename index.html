@@ -5,87 +5,347 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Shell Scripts — available scripts</title>
   <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
     :root {
       color-scheme: light dark;
-      --fg: #1a1a1a;
-      --muted: #555;
-      --border: #ccc;
-      --code-bg: #f4f4f5;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --fg: #0f172a;
+      --fg-soft: #334155;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --code-bg: #f8fafc;
+      --code-border: #e2e8f0;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --shadow: 0 1px 2px rgb(15 23 42 / 0.06), 0 4px 12px rgb(15 23 42 / 0.04);
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --space-page: clamp(1.5rem, 4vw, 2.75rem);
+      --space-section: clamp(2rem, 5vw, 3rem);
+      --space-card-y: 1.5rem;
+      --space-card-x: clamp(1.25rem, 3vw, 1.75rem);
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     }
+
     @media (prefers-color-scheme: dark) {
       :root {
-        --fg: #e8e8e8;
-        --muted: #9a9a9a;
-        --border: #444;
-        --code-bg: #252528;
+        --bg: #0c1222;
+        --surface: #141b2d;
+        --fg: #f1f5f9;
+        --fg-soft: #cbd5e1;
+        --muted: #94a3b8;
+        --border: #2d3a52;
+        --code-bg: #0f172a;
+        --code-border: #334155;
+        --accent: #60a5fa;
+        --accent-hover: #93c5fd;
+        --shadow: 0 1px 2px rgb(0 0 0 / 0.35), 0 8px 24px rgb(0 0 0 / 0.25);
       }
     }
+
+    html { -webkit-text-size-adjust: 100%; }
+
     body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      line-height: 1.5;
-      max-width: 52rem;
-      margin: 2rem auto;
-      padding: 0 1.25rem;
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.65;
+      color: var(--fg-soft);
+      background: var(--bg);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+    a:hover { color: var(--accent-hover); }
+
+    .wrap {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: var(--space-page);
+      padding-bottom: calc(var(--space-page) + 1rem);
+    }
+
+    .page-header {
+      margin-bottom: var(--space-section);
+    }
+
+    .page-header h1 {
+      margin: 0 0 0.75rem;
+      font-size: clamp(1.5rem, 4vw, 1.875rem);
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
       color: var(--fg);
     }
-    h1 { font-size: 1.35rem; font-weight: 600; margin-bottom: 0.25rem; }
-    p.lead { color: var(--muted); margin-top: 0; margin-bottom: 2rem; font-size: 0.95rem; }
-    ol { padding-left: 1.25rem; }
-    li { margin-bottom: 2rem; }
-    li h2 {
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin: 0 0 0.35rem 0;
+
+    .lead {
+      margin: 0;
+      font-size: 1.0625rem;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 36rem;
     }
-    li > p { margin: 0 0 0.5rem 0; color: var(--muted); font-size: 0.9rem; }
-    .use { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0.75rem 0 0.35rem 0; }
+
+    .lead code {
+      font-family: var(--mono);
+      font-size: 0.9em;
+      padding: 0.15em 0.4em;
+      border-radius: 6px;
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      color: var(--fg-soft);
+    }
+
+    .script-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.25rem, 3vw, 1.75rem);
+    }
+
+    .script-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: var(--space-card-y) var(--space-card-x);
+    }
+
+    .script-card h2 {
+      margin: 0 0 0.875rem;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      line-height: 1.35;
+      color: var(--fg);
+    }
+
+    .script-card h2 code {
+      font-family: var(--mono);
+      font-size: 0.98em;
+      font-weight: 600;
+    }
+
+    .script-card .desc {
+      margin: 0 0 1.375rem;
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      color: var(--fg-soft);
+    }
+
+    .script-card .desc code {
+      font-family: var(--mono);
+      font-size: 0.88em;
+      padding: 0.12em 0.35em;
+      border-radius: 5px;
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      color: var(--fg);
+    }
+
+    .examples-label {
+      margin: 0 0 0.625rem;
+      font-size: 0.6875rem;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .examples {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .code-block {
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      margin: 0;
+      padding: 0;
+      border: 1px solid var(--code-border);
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .copy-btn:hover {
+      color: var(--fg);
+      border-color: var(--muted);
+      background: color-mix(in srgb, var(--surface) 70%, transparent);
+    }
+
+    .copy-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .copy-btn svg {
+      width: 1rem;
+      height: 1rem;
+      flex-shrink: 0;
+      pointer-events: none;
+    }
+
+    .copy-btn.is-copied {
+      color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--code-border));
+    }
+
     pre {
       margin: 0;
-      padding: 0.65rem 0.85rem;
-      font-size: 0.8rem;
+      padding: 0.875rem 1rem;
+      font-family: var(--mono);
+      font-size: 0.8125rem;
+      line-height: 1.6;
       overflow-x: auto;
+      tab-size: 2;
       background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      border: 1px solid var(--code-border);
+      border-radius: var(--radius-md);
+      color: var(--fg);
     }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+
+    pre code {
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    .code-block pre {
+      padding-right: 2.75rem;
+    }
   </style>
 </head>
 <body>
-  <h1>Available scripts</h1>
-  <p class="lead">Shell utilities hosted at <code>https://scripts.msar.me/</code>. Run from a terminal; hosts scripts need administrator rights.</p>
+  <div class="wrap">
+    <header class="page-header">
+      <h1>Available scripts</h1>
+      <p class="lead">Shell utilities hosted at <code>https://scripts.msar.me/</code>. Run from a terminal; hosts scripts need administrator rights.</p>
+    </header>
 
-  <ol>
-    <li>
-      <h2><code>setup-husky.sh</code></h2>
-      <p>Installs and configures <a href="https://typicode.github.io/husky/">Husky</a> with pre-commit and commit-msg hooks for Laravel/Vue-style projects (checks project directory, package manager, etc.).</p>
-      <p class="use">Use</p>
-      <pre><code>curl -sSL https://scripts.msar.me/setup-husky.sh | bash</code></pre>
-      <pre><code>curl -sSL https://scripts.msar.me/setup-husky.sh | bash -s -- /path/to/project</code></pre>
-    </li>
+    <ol class="script-list">
+      <li class="script-card">
+        <h2><code>setup-husky.sh</code></h2>
+        <p class="desc">Installs and configures <a href="https://typicode.github.io/husky/">Husky</a> with pre-commit and commit-msg hooks for Laravel/Vue-style projects (checks project directory, package manager, etc.).</p>
+        <p class="examples-label">Use</p>
+        <div class="examples">
+          <pre><code>curl -sSL https://scripts.msar.me/setup-husky.sh | bash</code></pre>
+          <pre><code>curl -sSL https://scripts.msar.me/setup-husky.sh | bash -s -- /path/to/project</code></pre>
+        </div>
+      </li>
 
-    <li>
-      <h2><code>add-hosts-domain.sh</code></h2>
-      <p>Adds one or more local domains to <code>/etc/hosts</code> as <code>127.0.0.1</code> entries. Optional <code>--verify</code> (<code>-V</code>) to verify the file; <code>--help</code> (<code>-h</code>) for usage.</p>
-      <p class="use">Use</p>
-      <pre><code>curl -sSL https://scripts.msar.me/add-hosts-domain.sh | sudo bash -s -- domain1.test domain2.test</code></pre>
-      <pre><code>sudo bash add-hosts-domain.sh --verify domain1.test</code></pre>
-    </li>
+      <li class="script-card">
+        <h2><code>add-hosts-domain.sh</code></h2>
+        <p class="desc">Adds one or more local domains to <code>/etc/hosts</code> as <code>127.0.0.1</code> entries. Optional <code>--verify</code> (<code>-V</code>) to verify the file; <code>--help</code> (<code>-h</code>) for usage.</p>
+        <p class="examples-label">Use</p>
+        <div class="examples">
+          <pre><code>curl -sSL https://scripts.msar.me/add-hosts-domain.sh | sudo bash -s -- domain1.test domain2.test</code></pre>
+          <pre><code>sudo bash add-hosts-domain.sh --verify domain1.test</code></pre>
+        </div>
+      </li>
 
-    <li>
-      <h2><code>remove-hosts-domain.sh</code></h2>
-      <p>Removes matching domain lines from <code>/etc/hosts</code>. Same flags as add: <code>--verify</code>, <code>--help</code>.</p>
-      <p class="use">Use</p>
-      <pre><code>curl -sSL https://scripts.msar.me/remove-hosts-domain.sh | sudo bash -s -- domain1.test</code></pre>
-      <pre><code>sudo bash remove-hosts-domain.sh domain1.test domain2.test</code></pre>
-    </li>
+      <li class="script-card">
+        <h2><code>remove-hosts-domain.sh</code></h2>
+        <p class="desc">Removes matching domain lines from <code>/etc/hosts</code>. Same flags as add: <code>--verify</code>, <code>--help</code>.</p>
+        <p class="examples-label">Use</p>
+        <div class="examples">
+          <pre><code>curl -sSL https://scripts.msar.me/remove-hosts-domain.sh | sudo bash -s -- domain1.test</code></pre>
+          <pre><code>sudo bash remove-hosts-domain.sh domain1.test domain2.test</code></pre>
+        </div>
+      </li>
 
-    <li>
-      <h2><code>set-editor.sh</code></h2>
-      <p>macOS: uses <code>duti</code> to set the default app for many code-related file extensions. Edit <code>EDITOR_ID</code> inside the script (e.g. bundle id for VS Code or Zed) before running.</p>
-      <p class="use">Use</p>
-      <pre><code>curl -sSL https://scripts.msar.me/set-editor.sh | bash</code></pre>
-    </li>
-  </ol>
+      <li class="script-card">
+        <h2><code>set-editor.sh</code></h2>
+        <p class="desc">macOS: uses <code>duti</code> to set the default app for many code-related file extensions. Edit <code>EDITOR_ID</code> inside the script (e.g. bundle id for VS Code or Zed) before running.</p>
+        <p class="examples-label">Use</p>
+        <div class="examples">
+          <pre><code>curl -sSL https://scripts.msar.me/set-editor.sh | bash</code></pre>
+        </div>
+      </li>
+    </ol>
+  </div>
+  <script>
+    (function () {
+      const COPY_ICON =
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+      const COPIED_MS = 1600;
+
+      function snippetText(pre) {
+        const code = pre.querySelector("code");
+        return (code ? code.textContent : pre.textContent).replace(/\u00a0/g, " ").trim();
+      }
+
+      async function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        if (!ok) throw new Error("copy failed");
+      }
+
+      function mountCopyButton(pre) {
+        const block = document.createElement("div");
+        block.className = "code-block";
+        pre.replaceWith(block);
+        block.appendChild(pre);
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "copy-btn";
+        btn.setAttribute("aria-label", "Copy command");
+        btn.innerHTML = COPY_ICON;
+        block.appendChild(btn);
+
+        let revertTimer;
+        btn.addEventListener("click", async () => {
+          clearTimeout(revertTimer);
+          try {
+            await copyText(snippetText(pre));
+            btn.classList.add("is-copied");
+            btn.setAttribute("aria-label", "Copied");
+            revertTimer = setTimeout(() => {
+              btn.classList.remove("is-copied");
+              btn.setAttribute("aria-label", "Copy command");
+            }, COPIED_MS);
+          } catch {
+            btn.setAttribute("aria-label", "Copy failed");
+            revertTimer = setTimeout(() => btn.setAttribute("aria-label", "Copy command"), COPIED_MS);
+          }
+        });
+      }
+
+      document.querySelectorAll(".examples pre").forEach(mountCopyButton);
+    })();
+  </script>
 </body>
 </html>
