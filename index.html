@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shell Scripts — available scripts</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --fg: #1a1a1a;
+      --muted: #555;
+      --border: #ccc;
+      --code-bg: #f4f4f5;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fg: #e8e8e8;
+        --muted: #9a9a9a;
+        --border: #444;
+        --code-bg: #252528;
+      }
+    }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      line-height: 1.5;
+      max-width: 52rem;
+      margin: 2rem auto;
+      padding: 0 1.25rem;
+      color: var(--fg);
+    }
+    h1 { font-size: 1.35rem; font-weight: 600; margin-bottom: 0.25rem; }
+    p.lead { color: var(--muted); margin-top: 0; margin-bottom: 2rem; font-size: 0.95rem; }
+    ol { padding-left: 1.25rem; }
+    li { margin-bottom: 2rem; }
+    li h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 0 0 0.35rem 0;
+    }
+    li > p { margin: 0 0 0.5rem 0; color: var(--muted); font-size: 0.9rem; }
+    .use { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0.75rem 0 0.35rem 0; }
+    pre {
+      margin: 0;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+  </style>
+</head>
+<body>
+  <h1>Available scripts</h1>
+  <p class="lead">Shell utilities hosted at <code>https://scripts.msar.me/</code>. Run from a terminal; hosts scripts need administrator rights.</p>
+
+  <ol>
+    <li>
+      <h2><code>setup-husky.sh</code></h2>
+      <p>Installs and configures <a href="https://typicode.github.io/husky/">Husky</a> with pre-commit and commit-msg hooks for Laravel/Vue-style projects (checks project directory, package manager, etc.).</p>
+      <p class="use">Use</p>
+      <pre><code>curl -sSL https://scripts.msar.me/setup-husky.sh | bash</code></pre>
+      <pre><code>curl -sSL https://scripts.msar.me/setup-husky.sh | bash -s -- /path/to/project</code></pre>
+    </li>
+
+    <li>
+      <h2><code>add-hosts-domain.sh</code></h2>
+      <p>Adds one or more local domains to <code>/etc/hosts</code> as <code>127.0.0.1</code> entries. Optional <code>--verify</code> (<code>-V</code>) to verify the file; <code>--help</code> (<code>-h</code>) for usage.</p>
+      <p class="use">Use</p>
+      <pre><code>curl -sSL https://scripts.msar.me/add-hosts-domain.sh | sudo bash -s -- domain1.test domain2.test</code></pre>
+      <pre><code>sudo bash add-hosts-domain.sh --verify domain1.test</code></pre>
+    </li>
+
+    <li>
+      <h2><code>remove-hosts-domain.sh</code></h2>
+      <p>Removes matching domain lines from <code>/etc/hosts</code>. Same flags as add: <code>--verify</code>, <code>--help</code>.</p>
+      <p class="use">Use</p>
+      <pre><code>curl -sSL https://scripts.msar.me/remove-hosts-domain.sh | sudo bash -s -- domain1.test</code></pre>
+      <pre><code>sudo bash remove-hosts-domain.sh domain1.test domain2.test</code></pre>
+    </li>
+
+    <li>
+      <h2><code>set-editor.sh</code></h2>
+      <p>macOS: uses <code>duti</code> to set the default app for many code-related file extensions. Edit <code>EDITOR_ID</code> inside the script (e.g. bundle id for VS Code or Zed) before running.</p>
+      <p class="use">Use</p>
+      <pre><code>curl -sSL https://scripts.msar.me/set-editor.sh | bash</code></pre>
+    </li>
+  </ol>
+</body>
+</html>
